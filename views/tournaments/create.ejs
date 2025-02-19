@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Tournament - TheGuysofeFootball</title>
+    <link href="/dist/style.css" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <%- include('../partials/nav') %>
+    
+    <main class="flex-1 py-10">
+        <div class="container mx-auto px-4">
+            <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-3 text-center">Generate Your Tournament</h1>
+                <p class="text-lg text-gray-500 mb-8 text-center">Create your tournament or bracket now! It's free and no sign-up required.</p>
+                
+                <form action="/tournaments/create" method="POST" class="space-y-6">
+                    <div class="space-y-2">
+                        <label for="name" class="block text-sm font-semibold text-gray-700">Tournament Name</label>
+                        <input type="text" name="name" id="name" required
+                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm transition duration-150 ease-in-out"
+                            placeholder="Enter tournament name">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="format" class="block text-sm font-semibold text-gray-700">Format</label>
+                        <select name="format" id="format" required
+                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm transition duration-150 ease-in-out appearance-none">
+                            <option value="" disabled selected>Select tournament format</option>
+                            <option value="league">League</option>
+                            <option value="knockout">Knockout</option>
+                            <option value="groups">Groups</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="maxTeams" class="block text-sm font-semibold text-gray-700">Maximum Teams</label>
+                        <input type="number" name="maxTeams" id="maxTeams" min="2" max="32" required
+                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm transition duration-150 ease-in-out"
+                            placeholder="Enter number of teams">
+                    </div>
+
+                    <div class="space-y-2">
+                        <label for="description" class="block text-sm font-semibold text-gray-700">Description</label>
+                        <textarea name="description" id="description" rows="4" required
+                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm transition duration-150 ease-in-out resize-none"
+                            placeholder="Enter tournament description"></textarea>
+                    </div>
+
+                    <div class="flex justify-end space-x-4 pt-4">
+                        <a href="/" 
+                           class="px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition duration-150 ease-in-out">
+                            Cancel
+                        </a>
+                        <button type="submit" 
+                                class="px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition duration-150 ease-in-out">
+                            Create Tournament
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

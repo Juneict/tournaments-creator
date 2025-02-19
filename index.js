@@ -3,11 +3,11 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const ejs = require('ejs');
 const path = require('path');
+const expressLayouts = require('express-ejs-layouts');
 
 dotenv.config();
 
 connectDB();
-
 const app = express();
 
 app.use(express.json());
@@ -19,6 +19,9 @@ app.set('view engine', 'ejs');
 app.get('/', (req, res) => {
     res.render('index')
   })
+
+// Routes
+app.use('/tournaments', require('./routes/tournamentRoutes'));
 
 const PORT = process.env.PORT || 5000;
 
