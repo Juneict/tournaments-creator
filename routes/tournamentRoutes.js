@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Tournament = require('../models/Tournament');
 
-// Get tournament creation form
 router.get('/create', (req, res) => {
     res.render('tournaments/create');
 });
 
-// Create new tournament
 router.post('/create', async (req, res) => {
     try {
         const { name, format, maxTeams, description } = req.body;
@@ -31,6 +29,33 @@ router.post('/create', async (req, res) => {
             error: 'Failed to create tournament',
             formData: req.body
         });
+    }
+});
+
+router.get('/list', async (req, res) => {
+    try {
+        // const tempUserId = '65d1234567890123456789ab';
+        
+        const tournaments = await Tournament.find()
+            .sort({ createdAt: -1 })
+        
+        res.render('tournaments/list', { 
+            tournaments,
+            title: 'Tournaments List'
+        });
+    } catch (error) {
+        console.error(error);
+        res.redirect('/');
+    }
+});
+
+router.get('/:id', async (req, res) => {
+    try {
+        const tournament = await Tournament.findById(req.params.id);
+        res.render('tournaments/show', { tournament });
+    } catch (error) {
+        console.error(error);
+        res.redirect('/');
     }
 });
 

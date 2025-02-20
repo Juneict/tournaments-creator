@@ -1,74 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TheGuysofeFootball</title>
-    <link href="/dist/style.css" rel="stylesheet">
-</head>
-<body class="min-h-screen flex flex-col">
+    <link href="/dist/style.css" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen flex flex-col">
     <%- include('partials/nav') %>
-    
-   <main class="flex-1">
-        <!-- Hero Section -->
-        <div class="bg-gray-900 text-white py-16">
-            <div class="container mx-auto px-4">
-                <div class="max-w-3xl mx-auto text-center">
-                    <h1 class="text-5xl font-bold mb-6">Create Your eFootball Tournament</h1>
-                    <p class="text-xl text-gray-300 mb-8">Organize and manage your tournaments with ease. Free tournament brackets and management tools.</p>
-                    <a href="/tournaments/create" class="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300">
-                        Create Tournament
-                    </a>
-                </div>
-            </div>
-        </div>
 
-        <!-- Features Section -->
-        <div class="py-16">
-            <div class="container mx-auto px-4">
-                <div class="grid md:grid-cols-3 gap-8">
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="text-blue-600 mb-4">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2">Easy Setup</h3>
-                        <p class="text-gray-600">Create your tournament in minutes with our simple setup process.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="text-blue-600 mb-4">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2">Live Updates</h3>
-                        <p class="text-gray-600">Real-time score updates and tournament progression tracking.</p>
-                    </div>
-                    <div class="bg-white p-6 rounded-lg shadow-md">
-                        <div class="text-blue-600 mb-4">
-                            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-2">Team Management</h3>
-                        <p class="text-gray-600">Easily manage teams, players, and match schedules.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <main class="flex-1">
+      <!-- Hero Section -->
+      <%- include('components/hero.ejs') %>
 
-        <!-- Latest Tournaments Section -->
-        <div class="bg-gray-100 py-16">
-            <div class="container mx-auto px-4">
-                <h2 class="text-3xl font-bold text-center mb-8">Latest Tournaments</h2>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Tournament cards will be dynamically added here -->
-                </div>
-            </div>
-        </div>
+      <!-- Features Section -->
+      <%- include('components/features.ejs') %>
     </main>
 
     <%- include('partials/footer') %>
-</body>
+  </body>
 </html>

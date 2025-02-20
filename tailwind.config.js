@@ -5,7 +5,15 @@ module.exports = {
     "./public/**/*.js"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'efootball-blue': '#1a365d',
+        'efootball-orange': '#ed8936',
+      },
+      backgroundImage: {
+        'hero-pattern': "url('/images/pattern.png')",
+      },
+    },
   },
   plugins: [],
 }
