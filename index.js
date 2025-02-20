@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/tournaments', require('./routes/tournamentRoutes'));
+app.use('/teams', require('./routes/teamRoutes'));
 
 const PORT = process.env.PORT || 5000;
 

@@ -59,4 +59,14 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.post('/delete/:id', async (req, res) => {
+    try {
+        await Tournament.findByIdAndDelete(req.params.id);
+        res.redirect('/tournaments/list');
+    } catch (error) {
+        console.error(error);
+        res.redirect('/tournaments/list');
+    }
+});
+
 module.exports = router;
