@@ -55,12 +55,13 @@ const tournamentSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
+    },
+    settings: {
+        legsQty: { type: Number, default: 2 },
+        pointPerWin: { type: Number, default: 3 },
+        pointPerDraw: { type: Number, default: 1 },
+        pointPerLose: { type: Number, default: 0 }
     }
-});
-
-tournamentSchema.pre('save', function(next) {
-    this.updatedAt = Date.now();
-    next();
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Tournament', tournamentSchema);

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= tournament.name %> - Matches - TheGuysofeFootball</title>
+  <link href="/dist/style.css" rel="stylesheet" />
+</head>
+
+<body class="min-h-screen flex flex-col bg-gray-50">
+  <%- include('../partials/nav') %>
+
+  <main class="flex-1 py-10">
+    <div class="container mx-auto px-4">
+      <div class="max-w-6xl mx-auto">
+        <!-- Tournament Header -->
+        <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-t-xl p-8 text-white">
+          <h1 class="text-4xl font-bold mb-6"><%= tournament.name %></h1>
+          <% if (!matches.length && tournament.teams.length >= 2) { %>
+          <form action="/tournaments/<%= tournament._id %>/generate-matches" method="POST">
+            <button type="submit" class="px-6 py-2 bg-yellow-400 text-blue-900 rounded-lg hover:bg-yellow-300 transition duration-150 ease-in-out">
+              Generate Matches
+            </button>
+          </form>
+          <% } %>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <%- include('./partials/tournamentTabs', { tournament, activeTab: 'matches' }) %>
+
+        <!-- Matches List -->
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+          <% let currentLeg = 0; %>
+          <% let matchCounter = 0; %>
+          
+          <% matches.forEach((match, index) => { %>
+            <% if (currentLeg !== match.leg) { %>
+              <% if (matchCounter > 0 && matchCounter % 3 !== 0) { %>
+                <!-- Close the previous row if it's not complete -->
+                </div>
+              <% } %>
+              
+              <% currentLeg = match.leg; %>
+              <% matchCounter = 0; %>
+              
+              <h3 class="text-xl font-bold text-blue-900 border-b pb-2 mb-4 text-center">
+                Leg <%= match.leg %>
+              </h3>
+            <% } %>
+            
+            <% if (matchCounter % 3 === 0) { %>
+              <!-- Start a new row for every 3 matches -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <% } %>
+            
+            <!-- Individual Match Card -->
+            <div class="bg-gray-100 rounded-lg px-4 py-3" style="margin-right:10px !important">
+              <div class="flex flex-col">
+                <!-- Home Team -->
+                <div class="flex justify-between items-center mb-2">
+                  <span class="font-semibold text-gray-900 truncate max-w-full"><%= match.homeTeam.name %></span>
+                </div>
+                
+                <!-- Score/Form Section -->
+                <div class="flex justify-center items-center mb-2">
+                    <% if (match.played) { %>
+                        <div class="flex items-center space-x-4">
+                            <div class="text-lg font-bold bg-gray-50 px-4 py-2 rounded-lg">
+                                <span class="text-blue-600"><%= match.result.homeScore %></span>
+                                <span class="text-gray-600">-</span>
+                                <span class="text-blue-600"><%= match.result.awayScore %></span>
+                            </div>
+                            <form action="/tournaments/<%= tournament._id %>/matches/<%= match._id %>/delete-result" 
+                                  method="POST" 
+                                  class="inline"
+                                  onsubmit="return confirm('Are you sure you want to delete this result?')">
+                                <button type="submit" 
+                                        class="p-2 text-red-600 hover:text-red-800 rounded-full hover:bg-red-50 transition-colors duration-200">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    <% } else { %>
+                        <form action="/tournaments/<%= tournament._id %>/matches/<%= match._id %>" 
+                              method="POST" 
+                              class="flex space-x-2">
+                            <input type="number" 
+                                   name="homeScore" 
+                                   class="w-12 text-center border rounded-md" 
+                                   required 
+                                   min="0" />
+                            <span>-</span>
+                            <input type="number" 
+                                   name="awayScore" 
+                                   class="w-12 text-center border rounded-md" 
+                                   required 
+                                   min="0" />
+                            <button type="submit" 
+                                    class="px-3 py-1 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition-colors duration-200">
+                                Save
+                            </button>
+                        </form>
+                    <% } %>
+                </div>
+                
+                <!-- Away Team -->
+                <div class="flex justify-between items-center">
+                  <span class="font-semibold text-gray-900 truncate max-w-full"><%= match.awayTeam.name %></span>
+                </div>
+              </div>
+            </div>
+            
+            <% matchCounter++; %>
+            
+            <% if (matchCounter % 3 === 0 || index === matches.length - 1) { %>
+              <!-- Close the row after 3 matches or if it's the last match -->
+              </div>
+            <% } %>
+          <% }) %>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+</body>
+
+</html>

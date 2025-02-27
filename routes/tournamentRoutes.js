@@ -2,16 +2,16 @@ const express = require('express');
 const router = express.Router();
 const Tournament = require('../models/Tournament');
 const Team = require('../models/Team');
+const Match = require('../models/Match');
 
 router.get('/create', (req, res) => {
     res.render('tournaments/create');
 });
 
+// Update the create route to include default settings
 router.post('/create', async (req, res) => {
     try {
         const { name, format, maxTeams, description } = req.body;
-        
-        // Temporary user ID until authentication is implemented
         const tempUserId = '65d1234567890123456789ab';
 
         const tournament = await Tournament.create({
@@ -20,7 +20,13 @@ router.post('/create', async (req, res) => {
             maxTeams,
             description,
             createdBy: tempUserId,
-            status: 'draft'
+            status: 'draft',
+            settings: {
+                legsQty: 2,
+                pointPerWin: 3,
+                pointPerDraw: 1,
+                pointPerLose: 0
+            }
         });
 
         res.redirect('/tournaments/' + tournament._id);
@@ -88,6 +94,20 @@ router.get('/:id/teams', async (req, res) => {
     }
 });
 
+router.get('/:id/setting', async (req, res) => {
+    try {
+        alert('setting');
+        const tournament = await Tournament.findById(req.params.id);
+        
+        res.render('tournaments/setting', { 
+            tournament
+        });
+    } catch (error) {
+        console.error(error);
+        res.redirect(`/tournaments/${req.params.id}`);
+    }
+});
+
 router.post('/:id/teams/add', async (req, res) => {
     try {
         const { teamId } = req.body;
@@ -119,6 +139,131 @@ router.post('/:id/teams/:teamId/remove', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.redirect(`/tournaments/${req.params.id}/teams`);
+    }
+});
+
+router.get('/:id/settings', async (req, res) => {
+    try {
+        const tournament = await Tournament.findById(req.params.id);
+        res.render('tournaments/settings', { tournament, activeTab: 'settings' });
+    } catch (error) {
+        console.error(error);
+        res.redirect(`/tournaments/${req.params.id}`);
+    }
+});
+
+router.post('/:id/settings', async (req, res) => {
+    try {
+        const { legsQty, pointPerWin, pointPerDraw, pointPerLose } = req.body;
+        const tournament = await Tournament.findByIdAndUpdate(req.params.id, {
+            settings: {
+                legsQty: parseInt(legsQty),
+                pointPerWin: parseInt(pointPerWin),
+                pointPerDraw: parseInt(pointPerDraw),
+                pointPerLose: parseInt(pointPerLose)
+            }
+        }, { new: true });
+
+        res.redirect(`/tournaments/${tournament._id}/settings`);
+    } catch (error) {
+        console.error(error);
+        res.redirect(`/tournaments/${req.params.id}/settings`);
+    }
+});
+
+router.post('/:id/generate-matches', async (req, res) => {
+    try {
+        const tournament = await Tournament.findById(req.params.id).populate('teams.team');
+        const teams = tournament.teams.map(t => t.team._id);
+        
+        // Delete existing matches
+        await Match.deleteMany({ tournament: tournament._id });
+        
+        // Generate matches for each leg
+        for (let leg = 1; leg <= tournament.settings.legsQty; leg++) {
+            // Generate round-robin matches
+            for (let i = 0; i < teams.length; i++) {
+                for (let j = i + 1; j < teams.length; j++) {
+                    // For even legs, swap home and away
+                    const [homeTeam, awayTeam] = leg % 2 === 0 
+                        ? [teams[j], teams[i]]
+                        : [teams[i], teams[j]];
+
+                    await Match.create({
+                        tournament: tournament._id,
+                        homeTeam,
+                        awayTeam,
+                        leg
+                    });
+                }
+            }
+        }
+
+        // Update tournament status
+        tournament.status = 'ongoing';
+        await tournament.save();
+
+        res.redirect(`/tournaments/${tournament._id}/matches`);
+    } catch (error) {
+        console.error(error);
+        res.redirect(`/tournaments/${tournament._id}`);
+    }
+});
+
+// Add route to show matches
+router.get('/:id/matches', async (req, res) => {
+    try {
+        const tournament = await Tournament.findById(req.params.id);
+        const matches = await Match.find({ tournament: tournament._id })
+            .populate('homeTeam')
+            .populate('awayTeam')
+            .sort({ leg: 1, createdAt: 1 });
+
+        res.render('tournaments/matches', { 
+            tournament,
+            matches,
+            activeTab: 'matches'
+        });
+    } catch (error) {
+        console.error(error);
+        res.redirect(`/tournaments/${tournament._id}`);
+    }
+});
+
+// Add route to update match result
+router.post('/:id/matches/:matchId', async (req, res) => {
+    try {
+        const { homeScore, awayScore } = req.body;
+        
+        await Match.findByIdAndUpdate(req.params.matchId, {
+            played: true,
+            result: {
+                homeScore: parseInt(homeScore),
+                awayScore: parseInt(awayScore)
+            }
+        });
+
+        res.redirect(`/tournaments/${req.params.id}/matches`);
+    } catch (error) {
+        console.error(error);
+        res.redirect(`/tournaments/${req.params.id}/matches`);
+    }
+});
+
+router.post('/:id/matches/:matchId/delete-result', async (req, res) => {
+    try {
+        await Match.findByIdAndUpdate(req.params.matchId, {
+            played: false,
+            result: {
+                homeScore: null,
+                awayScore: null
+            }
+        });
+        
+        res.redirect(`/tournaments/${req.params.id}/matches`);
+    } catch (error) {
+        console.error(error);
+        res.redirect(`/tournaments/${req.params.id}/matches`);
     }
 });
 

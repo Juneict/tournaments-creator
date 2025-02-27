@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= tournament.name %> - Settings - TheGuysofeFootball</title>
+    <link href="/dist/style.css" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <%- include('../partials/nav') %>
+    
+    <main class="flex-1 py-10">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto">
+                <!-- Tournament Header -->
+                <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-t-xl p-8 text-white">
+                    <h1 class="text-4xl font-bold mb-6"><%= tournament.name %> - Settings</h1>
+                   
+                </div>
+
+                <!-- Navigation Tabs -->
+                <%- include('./partials/tournamentTabs', { tournament, activeTab: 'settings' }) %>
+
+                <!-- Main Content Area -->
+                <div class="bg-white shadow-lg rounded-b-xl p-8">
+                    <h1>Setting Pages</h1>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>
