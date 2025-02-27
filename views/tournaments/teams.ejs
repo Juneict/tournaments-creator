@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= tournament.name %> - Teams - TheGuysofeFootball</title>
+    <link href="/dist/style.css" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <%- include('../partials/nav') %>
+    
+    <main class="flex-1 py-10">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto">
+                <!-- Tournament Header -->
+                <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-t-xl p-8 text-white">
+                    <h1 class="text-4xl font-bold mb-6"><%= tournament.name %> - Teams</h1>
+                    <div class="flex items-center justify-between">
+                        <p class="text-gray-300">
+                            Teams: <%= tournament.teams.length %>/<%= tournament.maxTeams %>
+                        </p>
+                        <% if (tournament.teams.length < tournament.maxTeams) { %>
+                            <button onclick="document.getElementById('addTeamModal').classList.remove('hidden')"
+                                    class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200">
+                                Add Team
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <%- include('./partials/tournamentTabs', { tournament, activeTab: 'teams' }) %>
+
+                <!-- Main Content Area -->
+                <div class="bg-white shadow-lg rounded-b-xl p-8">
+                    <% if (tournament.teams.length === 0) { %>
+                        <div class="text-center py-12">
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">No Teams Yet</h3>
+                            <p class="text-gray-500">Start adding teams to your tournament.</p>
+                        </div>
+                    <% } else { %>
+                        <div class="grid gap-6">
+                            <% tournament.teams.forEach(entry => { %>
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <div>
+                                        <h3 class="font-medium text-gray-900"><%= entry.team.name %></h3>
+                                        <p class="text-sm text-gray-500">Joined <%= new Date(entry.joinedAt).toLocaleDateString() %></p>
+                                    </div>
+                                    <form action="/tournaments/<%= tournament._id %>/teams/<%= entry.team._id %>/remove" 
+                                          method="POST" 
+                                          onsubmit="return confirm('Are you sure you want to remove this team?')">
+                                        <button type="submit" 
+                                                class="text-red-600 hover:text-red-900 text-sm font-medium">
+                                            Remove
+                                        </button>
+                                    </form>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Team Modal -->
+    <div id="addTeamModal" class="fixed inset-0 bg-gray-900/50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="p-6">
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Add Team to Tournament</h3>
+                <% if (availableTeams.length === 0) { %>
+                    <p class="text-gray-500">No available teams to add.</p>
+                <% } else { %>
+                    <form action="/tournaments/<%= tournament._id %>/teams/add" method="POST">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="teamId" class="block text-sm font-medium text-gray-700">Select Team</label>
+                                <select name="teamId" id="teamId" required
+                                        class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 rounded-md">
+                                    <% availableTeams.forEach(team => { %>
+                                        <option value="<%= team._id %>"><%= team.name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            <div class="flex justify-end space-x-3">
+                                <button type="button" 
+                                        onclick="document.getElementById('addTeamModal').classList.add('hidden')"
+                                        class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md">
+                                    Cancel
+                                </button>
+                                <button type="submit"
+                                        class="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md">
+                                    Add Team
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>

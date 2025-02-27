@@ -1,24 +1,28 @@
 <div class="relative overflow-hidden">
     <!-- Background gradient -->
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-orange-600"></div>
+    <div class="absolute inset-0 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700"></div>
     
-    <!-- Optional overlay pattern -->
-    <div class="absolute inset-0 opacity-10 bg-[url('/images/pattern.png')] bg-repeat"></div>
+    <!-- Optional overlay pattern with yellow accent -->
+    <div class="absolute inset-0 opacity-10 bg-[url('/images/pattern.png')] bg-repeat mix-blend-overlay"></div>
+    
+    <!-- Yellow accent lines -->
+    <div class="absolute -top-24 right-0 w-96 h-96 bg-yellow-400/20 rounded-full blur-3xl"></div>
+    <div class="absolute -bottom-24 left-0 w-96 h-96 bg-yellow-400/20 rounded-full blur-3xl"></div>
 
     <!-- Content -->
     <div class="relative py-20">
         <div class="container mx-auto px-4">
             <div class="max-w-3xl mx-auto text-center">
                 <h1 class="text-5xl font-bold mb-6 text-white drop-shadow-lg">
-                    Create Your eFootball Tournament
+                    Create Your <span class="text-yellow-400">eFootball</span> Tournament
                 </h1>
                 <p class="text-xl text-gray-200 mb-8 drop-shadow">
                     Organize and manage your tournaments with ease. Free tournament brackets and management tools.
                 </p>
                 <a href="/tournaments/create" 
-                   class="inline-block bg-orange-500 text-white px-8 py-3 rounded-lg text-lg font-semibold 
-                          hover:bg-orange-600 transform hover:scale-105 transition-all duration-300 
-                          shadow-lg hover:shadow-orange-500/50">
+                   class="inline-block bg-yellow-400 text-blue-900 px-8 py-3 rounded-lg text-lg font-semibold 
+                          hover:bg-yellow-300 transform hover:scale-105 transition-all duration-300 
+                          shadow-lg hover:shadow-yellow-400/50">
                     Create Tournament
                 </a>
             </div>

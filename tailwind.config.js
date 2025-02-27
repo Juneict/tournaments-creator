@@ -11,7 +11,7 @@ module.exports = {
         'efootball-orange': '#ed8936',
       },
       backgroundImage: {
-        'hero-pattern': "url('/images/pattern.png')",
+        'hero-pattern': "url('/images/pattern.jpg')",
       },
     },
   },

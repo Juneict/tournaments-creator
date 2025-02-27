@@ -28,7 +28,9 @@
                         </div>
                         <div>
                             <p class="text-gray-300 text-sm">Teams</p>
-                            <p class="text-lg font-medium">0/<%= locals.tournament.maxTeams %></p>
+                            <p class="text-lg font-medium">
+                                <%= tournament.teams ? tournament.teams.length : 0 %>/<%= tournament.maxTeams %> 
+                            </p>
                         </div>
                     </div>
                 </div>
