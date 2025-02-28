@@ -267,4 +267,82 @@ router.post('/:id/matches/:matchId/delete-result', async (req, res) => {
     }
 });
 
+router.get('/:id/standings', async (req, res) => {
+    try {
+        const tournament = await Tournament.findById(req.params.id)
+            .populate('teams.team');
+        
+        const matches = await Match.find({ 
+            tournament: tournament._id,
+            played: true 
+        }).populate('homeTeam awayTeam');
+
+        // Calculate standings
+        const standings = tournament.teams.map(entry => ({
+            team: entry.team,
+            played: 0,
+            won: 0,
+            drawn: 0,
+            lost: 0,
+            goalsFor: 0,
+            goalsAgainst: 0,
+            goalDifference: 0,
+            points: 0
+        }));
+
+        // Process match results
+        matches.forEach(match => {
+            const homeTeamStanding = standings.find(s => s.team._id.equals(match.homeTeam._id));
+            const awayTeamStanding = standings.find(s => s.team._id.equals(match.awayTeam._id));
+
+            if (homeTeamStanding && awayTeamStanding) {
+                // Update matches played
+                homeTeamStanding.played++;
+                awayTeamStanding.played++;
+
+                // Update goals
+                homeTeamStanding.goalsFor += match.result.homeScore;
+                homeTeamStanding.goalsAgainst += match.result.awayScore;
+                awayTeamStanding.goalsFor += match.result.awayScore;
+                awayTeamStanding.goalsAgainst += match.result.homeScore;
+
+                // Update points and results
+                if (match.result.homeScore > match.result.awayScore) {
+                    homeTeamStanding.won++;
+                    awayTeamStanding.lost++;
+                    homeTeamStanding.points += tournament.settings.pointPerWin;
+                    awayTeamStanding.points += tournament.settings.pointPerLose;
+                } else if (match.result.homeScore < match.result.awayScore) {
+                    homeTeamStanding.lost++;
+                    awayTeamStanding.won++;
+                    homeTeamStanding.points += tournament.settings.pointPerLose;
+                    awayTeamStanding.points += tournament.settings.pointPerWin;
+                } else {
+                    homeTeamStanding.drawn++;
+                    awayTeamStanding.drawn++;
+                    homeTeamStanding.points += tournament.settings.pointPerDraw;
+                    awayTeamStanding.points += tournament.settings.pointPerDraw;
+                }
+            }
+        });
+
+        // Calculate goal difference and sort standings
+        standings.forEach(s => s.goalDifference = s.goalsFor - s.goalsAgainst);
+        standings.sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+            if (b.goalDifference !== a.goalDifference) return b.goalDifference - a.goalDifference;
+            return b.goalsFor - a.goalsFor;
+        });
+
+        res.render('tournaments/standings', { 
+            tournament,
+            standings,
+            activeTab: 'standings' 
+        });
+    } catch (error) {
+        console.error(error);
+        res.redirect(`/tournaments/${req.params.id}`);
+    }
+});
+
 module.exports = router;

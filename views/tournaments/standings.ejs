@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= tournament.name %> - Standings - TheGuysofeFootball</title>
+    <link href="/dist/style.css" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col bg-gray-50">
+    <%- include('../partials/nav') %>
+    
+    <main class="flex-1 py-10">
+        <div class="container mx-auto px-4">
+            <div class="max-w-5xl mx-auto">
+                <!-- Tournament Header -->
+                <div class="bg-gradient-to-r from-blue-900 to-blue-800 rounded-t-xl p-8 text-white">
+                    <h1 class="text-4xl font-bold mb-6"><%= tournament.name %> - Standings</h1>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <%- include('./partials/tournamentTabs', { tournament, activeTab: 'standings' }) %>
+
+                <!-- Standings Table -->
+                <div class="bg-white shadow-lg rounded-b-xl overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pos</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">P</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">W</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">L</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GF</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GA</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">GD</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <% standings.forEach((standing, index) => { %>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= index + 1 %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><%= standing.team.name %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.played %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.won %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.drawn %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.lost %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.goalsFor %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.goalsAgainst %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.goalDifference %></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-blue-600 text-center"><%= standing.points %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <%- include('../partials/footer') %>
+</body>
+</html>
