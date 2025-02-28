@@ -8,11 +8,11 @@ router.get('/list', tournamentController.listTournaments);
 router.get('/:id', tournamentController.getTournament);
 router.get('/:id/standings', tournamentController.getStandings);
 router.get('/:id/matches', tournamentController.getMatches);
+router.get('/:id/teams', tournamentController.getTeams);
 
 // Protected routes
 router.get('/create', auth, tournamentController.getCreateForm);
 router.post('/create', auth, tournamentController.createTournament);
-router.get('/:id/teams', auth, tournamentController.getTeams);
 router.post('/:id/teams/add', auth, tournamentController.addTeam);
 router.post('/:id/teams/:teamId/remove', auth, tournamentController.removeTeam);
 router.get('/:id/settings', auth, tournamentController.getSettings);

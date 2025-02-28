@@ -19,7 +19,7 @@
                         <p class="text-gray-300">
                             Teams: <%= tournament.teams.length %>/<%= tournament.maxTeams %>
                         </p>
-                        <% if (tournament.teams.length < tournament.maxTeams) { %>
+                        <% if (locals.user && teams.length < tournament.maxTeams) { %>
                             <button onclick="document.getElementById('addTeamModal').classList.remove('hidden')"
                                     class="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors duration-200">
                                 Add Team

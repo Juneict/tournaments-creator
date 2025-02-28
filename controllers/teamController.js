@@ -4,13 +4,10 @@ const teamController = {
     listTeams: async (req, res) => {
         try {
             const teams = await Team.find()
-                .sort({ createdAt: -1 })
-                .populate('createdBy', 'username');
+                .sort({ createdAt: -1 });
 
             res.render('teams/list', { 
-                teams,
-                isOwner: (team) => req.user && team.createdBy.equals(req.user._id)
-            });
+                teams});
         } catch (error) {
             console.error(error);
             res.redirect('/');
