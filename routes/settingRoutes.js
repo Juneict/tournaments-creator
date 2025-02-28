@@ -1,15 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Setting = require('../models/Setting');
+const { auth } = require('../middleware/auth');
+const settingController = require('../controllers/settingController');
 
-router.get('/setting', async (req, res) => {
-    try {
-        const teams = await Team.find().sort({ createdAt: -1 });
-        res.render('teams/list', { teams });
-    } catch (error) {
-        console.error(error);
-        res.redirect('/');
-    }
-});
+router.get('/', auth, settingController.getSettings);
+router.post('/update', auth, settingController.updateSettings);
 
 module.exports = router;

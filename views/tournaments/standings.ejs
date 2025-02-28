@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
@@ -23,7 +22,8 @@
 
                 <!-- Standings Table -->
                 <div class="bg-white shadow-lg rounded-b-xl overflow-hidden">
-                    <div class="overflow-x-auto">
+                    <!-- Desktop Table (hidden on mobile) -->
+                    <div class="hidden md:block overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-50">
                                 <tr>
@@ -57,6 +57,44 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Mobile Table (simplified version) -->
+                    <div class="md:hidden overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pos</th>
+                                    <th scope="col" class="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Team</th>
+                                    <th scope="col" class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">P</th>
+                                    <th scope="col" class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">W</th>
+                                    <th scope="col" class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
+                                    <th scope="col" class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">L</th>
+                                    <th scope="col" class="px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pts</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <% standings.forEach((standing, index) => { %>
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900"><%= index + 1 %></td>
+                                        <td class="px-3 py-3 whitespace-nowrap text-sm font-medium text-gray-900"><%= standing.team.name %></td>
+                                        <td class="px-2 py-3 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.played %></td>
+                                        <td class="px-2 py-3 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.won %></td>
+                                        <td class="px-2 py-3 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.drawn %></td>
+                                        <td class="px-2 py-3 whitespace-nowrap text-sm text-gray-500 text-center"><%= standing.lost %></td>
+                                        <td class="px-3 py-3 whitespace-nowrap text-sm font-bold text-blue-600 text-center"><%= standing.points %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- No Teams Message -->
+                    <% if (!standings.length) { %>
+                        <div class="text-center py-12">
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">No Standings Available</h3>
+                            <p class="text-gray-500">Teams need to play matches to generate standings.</p>
+                        </div>
+                    <% } %>
                 </div>
             </div>
         </div>
