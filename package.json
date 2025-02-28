@@ -5,10 +5,7 @@
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js",
-    "build": "npm install && npm run build:css:prod",
-    "vercel-build": "npm run build:css:prod",
     "build:css": "tailwindcss -i ./public/css/style.css -o ./public/dist/style.css --watch",
-    "build:css:prod": "tailwindcss -i ./public/css/style.css -o ./public/dist/style.css --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
