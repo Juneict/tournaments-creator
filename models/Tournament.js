@@ -64,4 +64,8 @@ const tournamentSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+tournamentSchema.methods.isOwner = function(userId) {
+    return this.createdBy.equals(userId);
+};
+
 module.exports = mongoose.model('Tournament', tournamentSchema);

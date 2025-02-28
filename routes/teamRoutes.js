@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { auth } = require('../middleware/auth');
 const Team = require('../models/Team');
 
-// Temporary user configuration
-const tempUserId = '65d1234567890123456789ab';
-
-// List teams
+// Public routes
 router.get('/list', async (req, res) => {
     try {
         const teams = await Team.find().sort({ createdAt: -1 });
@@ -16,13 +14,12 @@ router.get('/list', async (req, res) => {
     }
 });
 
-// Create team form
-router.get('/create', (req, res) => {
+// Protected routes
+router.get('/create', auth, (req, res) => {
     res.render('teams/create');
 });
 
-// Create team
-router.post('/create', async (req, res) => {
+router.post('/create', auth, async (req, res) => {
     try {
         const { name, description } = req.body;
         await Team.create({
@@ -40,8 +37,7 @@ router.post('/create', async (req, res) => {
     }
 });
 
-// Update team form
-router.get('/edit/:id', async (req, res) => {
+router.get('/edit/:id', auth, async (req, res) => {
     try {
         const team = await Team.findById(req.params.id);
         res.render('teams/edit', { team });
@@ -51,8 +47,7 @@ router.get('/edit/:id', async (req, res) => {
     }
 });
 
-// Update team
-router.post('/edit/:id', async (req, res) => {
+router.post('/edit/:id', auth, async (req, res) => {
     try {
         const { name, description } = req.body;
         await Team.findByIdAndUpdate(req.params.id, { name, description });
@@ -63,8 +58,7 @@ router.post('/edit/:id', async (req, res) => {
     }
 });
 
-// Delete team
-router.post('/delete/:id', async (req, res) => {
+router.post('/delete/:id', auth, async (req, res) => {
     try {
         await Team.findByIdAndDelete(req.params.id);
         res.redirect('/teams/list');

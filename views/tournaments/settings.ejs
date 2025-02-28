@@ -23,67 +23,116 @@
 
                 <!-- Main Content Area -->
                 <div class="bg-white shadow-lg rounded-b-xl p-8">
-                    <form action="/tournaments/<%= tournament._id %>/settings" method="POST" class="space-y-6">
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <!-- Match Settings -->
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">Match Settings</h3>
-                                <div class="space-y-4">
-                                    <div>
-                                        <label for="legsQty" class="block text-sm font-medium text-gray-700">Number of Legs</label>
-                                        <input type="number" 
-                                               id="legsQty" 
-                                               name="legsQty" 
-                                               value="<%= tournament.settings.legsQty %>"
-                                               min="1"
-                                               required
-                                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <% if (locals.user && tournament.createdBy.equals(user._id)) { %>
+                        <% if (tournament.status === 'draft') { %>
+                            <!-- Existing settings form -->
+                            <form action="/tournaments/<%= tournament._id %>/settings" method="POST" class="space-y-6">
+                                <div class="grid md:grid-cols-2 gap-6">
+                                    <!-- Match Settings -->
+                                    <div class="bg-gray-50 rounded-lg p-6">
+                                        <h3 class="text-lg font-medium text-gray-900 mb-4">Match Settings</h3>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label for="legsQty" class="block text-sm font-medium text-gray-700">Number of Legs</label>
+                                                <input type="number" 
+                                                       id="legsQty" 
+                                                       name="legsQty" 
+                                                       value="<%= tournament.settings.legsQty %>"
+                                                       min="1"
+                                                       required
+                                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Points Settings -->
+                                    <div class="bg-gray-50 rounded-lg p-6">
+                                        <h3 class="text-lg font-medium text-gray-900 mb-4">Points Settings</h3>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label for="pointPerWin" class="block text-sm font-medium text-gray-700">Points per Win</label>
+                                                <input type="number" 
+                                                       id="pointPerWin" 
+                                                       name="pointPerWin" 
+                                                       value="<%= tournament.settings.pointPerWin %>"
+                                                       required
+                                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            </div>
+                                            <div>
+                                                <label for="pointPerDraw" class="block text-sm font-medium text-gray-700">Points per Draw</label>
+                                                <input type="number" 
+                                                       id="pointPerDraw" 
+                                                       name="pointPerDraw" 
+                                                       value="<%= tournament.settings.pointPerDraw %>"
+                                                       required
+                                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            </div>
+                                            <div>
+                                                <label for="pointPerLose" class="block text-sm font-medium text-gray-700">Points per Loss</label>
+                                                <input type="number" 
+                                                       id="pointPerLose" 
+                                                       name="pointPerLose" 
+                                                       value="<%= tournament.settings.pointPerLose %>"
+                                                       required
+                                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex justify-end pt-6">
+                                    <button type="submit" 
+                                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out">
+                                        Save Settings
+                                    </button>
+                                </div>
+                            </form>
+                        <% } else { %>
+                            <div class="text-center py-12">
+                                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                                    <h3 class="text-lg font-medium text-yellow-800 mb-2">Settings Locked</h3>
+                                    <p class="text-yellow-700">Tournament settings cannot be modified after matches have been generated.</p>
+                                </div>
+                                <!-- Show current settings in read-only mode -->
+                                <div class="grid md:grid-cols-2 gap-6 mt-8">
+                                    <div class="bg-gray-50 rounded-lg p-6">
+                                        <h3 class="text-lg font-medium text-gray-900 mb-4">Match Settings</h3>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <span class="block text-sm font-medium text-gray-700">Number of Legs</span>
+                                                <span class="block mt-1 text-lg text-gray-900"><%= tournament.settings.legsQty %></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-gray-50 rounded-lg p-6">
+                                        <h3 class="text-lg font-medium text-gray-900 mb-4">Points Settings</h3>
+                                        <div class="space-y-4">
+                                            <div>
+                                                <span class="block text-sm font-medium text-gray-700">Points per Win</span>
+                                                <span class="block mt-1 text-lg text-gray-900"><%= tournament.settings.pointPerWin %></span>
+                                            </div>
+                                            <div>
+                                                <span class="block text-sm font-medium text-gray-700">Points per Draw</span>
+                                                <span class="block mt-1 text-lg text-gray-900"><%= tournament.settings.pointPerDraw %></span>
+                                            </div>
+                                            <div>
+                                                <span class="block text-sm font-medium text-gray-700">Points per Loss</span>
+                                                <span class="block mt-1 text-lg text-gray-900"><%= tournament.settings.pointPerLose %></span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Points Settings -->
-                            <div class="bg-gray-50 rounded-lg p-6">
-                                <h3 class="text-lg font-medium text-gray-900 mb-4">Points Settings</h3>
-                                <div class="space-y-4">
-                                    <div>
-                                        <label for="pointPerWin" class="block text-sm font-medium text-gray-700">Points per Win</label>
-                                        <input type="number" 
-                                               id="pointPerWin" 
-                                               name="pointPerWin" 
-                                               value="<%= tournament.settings.pointPerWin %>"
-                                               required
-                                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    </div>
-                                    <div>
-                                        <label for="pointPerDraw" class="block text-sm font-medium text-gray-700">Points per Draw</label>
-                                        <input type="number" 
-                                               id="pointPerDraw" 
-                                               name="pointPerDraw" 
-                                               value="<%= tournament.settings.pointPerDraw %>"
-                                               required
-                                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    </div>
-                                    <div>
-                                        <label for="pointPerLose" class="block text-sm font-medium text-gray-700">Points per Loss</label>
-                                        <input type="number" 
-                                               id="pointPerLose" 
-                                               name="pointPerLose" 
-                                               value="<%= tournament.settings.pointPerLose %>"
-                                               required
-                                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                    </div>
-                                </div>
+                        <% } %>
+                    <% } else { %>
+                        <div class="text-center py-12">
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Settings Access Restricted</h3>
+                            <p class="text-gray-500">Only the tournament creator can modify settings.</p>
+                            <div class="mt-6">
+                                <a href="/login" class="text-blue-600 hover:text-blue-500">Login to manage tournament</a>
                             </div>
                         </div>
-
-                        <div class="flex justify-end pt-6">
-                            <button type="submit" 
-                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-150 ease-in-out">
-                                Save Settings
-                            </button>
-                        </div>
-                    </form>
+                    <% } %>
                 </div>
             </div>
         </div>

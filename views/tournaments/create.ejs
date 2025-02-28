@@ -11,54 +11,90 @@
     
     <main class="flex-1 py-10">
         <div class="container mx-auto px-4">
-            <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
-                <h1 class="text-3xl font-bold text-gray-900 mb-3 text-center">Generate Your Tournament</h1>
-                <p class="text-lg text-gray-500 mb-8 text-center">Create your tournament or bracket now! It's free and no sign-up required.</p>
-                
-                <form action="/tournaments/create" method="POST" class="space-y-6">
-                    <div class="space-y-2">
-                        <label for="name" class="block text-sm font-semibold text-gray-700">Tournament Name</label>
-                        <input type="text" name="name" id="name" required
-                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm transition duration-150 ease-in-out"
-                            placeholder="Enter tournament name">
-                    </div>
+            <div class="max-w-3xl mx-auto">
+                <div class="bg-white shadow-lg rounded-lg p-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-8">Create Tournament</h1>
 
-                    <div class="space-y-2">
-                        <label for="format" class="block text-sm font-semibold text-gray-700">Format</label>
-                        <select name="format" id="format" required
-                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm transition duration-150 ease-in-out appearance-none">
-                            <option value="" disabled selected>Select tournament format</option>
-                            <option value="league">League</option>
-                            <!-- <option value="knockout">Knockout</option>
-                            <option value="groups">Groups</option> -->
-                        </select>
-                    </div>
+                    <% if (locals.error) { %>
+                        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6">
+                            <p class="text-sm text-red-700"><%= error %></p>
+                        </div>
+                    <% } %>
 
-                    <div class="space-y-2">
-                        <label for="maxTeams" class="block text-sm font-semibold text-gray-700">Maximum Teams</label>
-                        <input type="number" name="maxTeams" id="maxTeams" min="2" max="32" required
-                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm transition duration-150 ease-in-out"
-                            placeholder="Enter number of teams">
-                    </div>
+                    <form action="/tournaments/create" method="POST" class="space-y-6">
+                        <!-- Tournament Name Input -->
+                        <div class="form-group">
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Tournament Name</label>
+                            <div class="relative">
+                                <input type="text" 
+                                       id="name" 
+                                       name="name" 
+                                       required
+                                       placeholder="Enter tournament name"
+                                       value="<%= locals.formData ? formData.name : '' %>"
+                                       class="mt-1 block w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200">
+                            </div>
+                        </div>
 
-                    <div class="space-y-2">
-                        <label for="description" class="block text-sm font-semibold text-gray-700">Description</label>
-                        <textarea name="description" id="description" rows="4" required
-                            class="block w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm transition duration-150 ease-in-out resize-none"
-                            placeholder="Enter tournament description"></textarea>
-                    </div>
+                        <!-- Format Select -->
+                        <div class="form-group">
+                            <label for="format" class="block text-sm font-medium text-gray-700 mb-1">Tournament Format</label>
+                            <div class="relative">
+                                <select id="format" 
+                                        name="format" 
+                                        required
+                                        class="mt-1 block w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 bg-white">
+                                    <option value="" disabled selected>Select tournament format</option>
+                                    <option value="league" <%= locals.formData && formData.format === 'league' ? 'selected' : '' %>>League</option>
+                                    <option value="knockout" <%= locals.formData && formData.format === 'knockout' ? 'selected' : '' %>>Knockout</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+                                    <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="flex justify-end space-x-4 pt-4">
-                        <a href="/" 
-                           class="px-6 py-3 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition duration-150 ease-in-out">
-                            Cancel
-                        </a>
-                        <button type="submit" 
-                                class="px-6 py-3 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition duration-150 ease-in-out">
-                            Create Tournament
-                        </button>
-                    </div>
-                </form>
+                        <!-- Maximum Teams Input -->
+                        <div class="form-group">
+                            <label for="maxTeams" class="block text-sm font-medium text-gray-700 mb-1">Maximum Teams</label>
+                            <div class="relative">
+                                <input type="number" 
+                                       id="maxTeams" 
+                                       name="maxTeams" 
+                                       required
+                                       min="2"
+                                       max="32"
+                                       placeholder="Enter number of teams"
+                                       value="<%= locals.formData ? formData.maxTeams : '8' %>"
+                                       class="mt-1 block w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-8">
+                                    <span class="text-gray-500 text-sm">teams</span>
+                                </div>
+                            </div>
+                            <p class="mt-1 text-sm text-gray-500">Minimum 2, maximum 32 teams</p>
+                        </div>
+
+                        <!-- Description Textarea -->
+                        <div class="form-group">
+                            <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Tournament Description</label>
+                            <textarea id="description" 
+                                      name="description" 
+                                      rows="4"
+                                      placeholder="Enter tournament description"
+                                      class="mt-1 block w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors duration-200 resize-none"><%= locals.formData ? formData.description : '' %></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="pt-6">
+                            <button type="submit" 
+                                    class="w-full flex justify-center py-3 px-4 border-0 rounded-lg text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 shadow-lg hover:shadow-xl">
+                                Create Tournament
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </main>

@@ -39,47 +39,43 @@
 
         <!-- Tournaments List -->
         <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div class="flex justify-between items-center p-6 border-b">
+            <h1 class="text-2xl font-bold text-gray-900"><%= locals.title || 'All Tournaments' %></h1>
+            <% if (locals.user) { %>
+              <div class="flex space-x-4">
+                <a href="/tournaments/my-tournaments" 
+                   class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-500">
+                  My Tournaments
+                </a>
+                <a href="/tournaments/create" 
+                   class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium">
+                  Create Tournament
+                </a>
+              </div>
+            <% } %>
+          </div>
+
           <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
-                  <th
-                    scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Tournament Name
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Format
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Teams
-                  </th>
-                  <th
-                    scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                  >
-                    Status
-                  </th>
-                  <th scope="col" class="relative px-6 py-3">
-                    <span class="sr-only">Actions</span>
-                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Format</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teams</th>
+                  <!-- <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created By</th> -->
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <% if (tournaments.length === 0) { %>
+                <% if (!tournaments.length) { %>
                 <tr>
                   <td colspan="6" class="px-6 py-4 text-center text-gray-500">
                     No tournaments found
                   </td>
                 </tr>
-                <% } else { %> <% tournaments.forEach(tournament => { %>
+                <% } else { %>
+                <% tournaments.forEach(tournament => { %>
                 <tr class="hover:bg-gray-50">
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm font-medium text-gray-900">
@@ -93,43 +89,24 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="text-sm text-gray-500">
-                      <%= tournament.teams ? tournament.teams.length : 0 %>/<%=
-                      tournament.maxTeams %>
+                      <%= tournament.teams ? tournament.teams.length : 0 %>/<%= tournament.maxTeams %>
                     </div>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap">
-                    <span
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full <%= tournament.status === 'ongoing' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800' %>"
-                    >
+                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                      <%= tournament.status === 'ongoing' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800' %>">
                       <%= tournament.status %>
                     </span>
                   </td>
-                  <td
-                    class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
-                  >
-                    <div class="flex justify-end space-x-2">
-                      <a
-                        href="/tournaments/<%= tournament._id %>"
-                        class="text-blue-600 hover:text-blue-900"
-                        >View</a
-                      >
-                      <form
-                        action="/tournaments/delete/<%= tournament._id %>"
-                        method="POST"
-                        class="inline"
-                      >
-                        <button
-                          type="submit"
-                          class="text-red-600 hover:text-red-900"
-                          onclick="return confirm('Are you sure you want to delete this tournament?')"
-                        >
-                          Delete
-                        </button>
-                      </form>
-                    </div>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <a href="/tournaments/<%= tournament._id %>" class="text-blue-600 hover:text-blue-900">View</a>
+                    <% if (tournament.isOwner) { %>
+                    <a href="/tournaments/<%= tournament._id %>/settings" class="ml-4 text-blue-600 hover:text-blue-900">Manage</a>
+                    <% } %>
                   </td>
                 </tr>
-                <% }); %> <% } %>
+                <% }); %>
+                <% } %>
               </tbody>
             </table>
           </div>
